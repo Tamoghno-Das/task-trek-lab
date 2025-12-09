@@ -1,4 +1,4 @@
-# Welcome to your Lovable project
+# WELCOME TO TASK-TREK-PROJECT
 
 ## Project info
 
@@ -6,12 +6,9 @@
 
 There are several ways of editing your application.
 
-Changes made via Lovable will be committed automatically to this repo.
-
 **Use your preferred IDE**
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
+If you want to work locally using your own IDE, you can clone this repo and push changes.
 The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
 Follow these steps:
@@ -56,12 +53,10 @@ This project is built with:
 
 ## How can I deploy this project?
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
 
 Yes, you can!
 
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+<img width="1336" height="963" alt="Screenshot 2025-12-09 151922" src="https://github.com/user-attachments/assets/21a27041-7e55-4ca0-a39b-326fb4af1e6e" />
+
