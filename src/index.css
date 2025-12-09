@@ -1,0 +1,200 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 20% 6%;
+    --foreground: 180 100% 95%;
+
+    --card: 220 25% 10%;
+    --card-foreground: 180 100% 95%;
+
+    --popover: 220 25% 10%;
+    --popover-foreground: 180 100% 95%;
+
+    --primary: 180 100% 50%;
+    --primary-foreground: 220 20% 6%;
+
+    --secondary: 220 30% 15%;
+    --secondary-foreground: 180 100% 90%;
+
+    --muted: 220 25% 18%;
+    --muted-foreground: 220 15% 60%;
+
+    --accent: 280 100% 65%;
+    --accent-foreground: 220 20% 6%;
+
+    --destructive: 0 85% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 180 50% 25%;
+    --input: 220 30% 15%;
+    --ring: 180 100% 50%;
+
+    --radius: 0.75rem;
+
+    /* Custom cyberpunk colors */
+    --glow-cyan: 180 100% 50%;
+    --glow-purple: 280 100% 65%;
+    --glow-green: 160 100% 45%;
+    --glow-orange: 35 100% 55%;
+
+    --sidebar-background: 220 25% 8%;
+    --sidebar-foreground: 180 100% 95%;
+    --sidebar-primary: 180 100% 50%;
+    --sidebar-primary-foreground: 220 20% 6%;
+    --sidebar-accent: 220 30% 15%;
+    --sidebar-accent-foreground: 180 100% 90%;
+    --sidebar-border: 180 50% 25%;
+    --sidebar-ring: 180 100% 50%;
+  }
+
+  .dark {
+    --background: 220 20% 6%;
+    --foreground: 180 100% 95%;
+    --card: 220 25% 10%;
+    --card-foreground: 180 100% 95%;
+    --popover: 220 25% 10%;
+    --popover-foreground: 180 100% 95%;
+    --primary: 180 100% 50%;
+    --primary-foreground: 220 20% 6%;
+    --secondary: 220 30% 15%;
+    --secondary-foreground: 180 100% 90%;
+    --muted: 220 25% 18%;
+    --muted-foreground: 220 15% 60%;
+    --accent: 280 100% 65%;
+    --accent-foreground: 220 20% 6%;
+    --destructive: 0 85% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 180 50% 25%;
+    --input: 220 30% 15%;
+    --ring: 180 100% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+    font-family: 'Inter', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Orbitron', sans-serif;
+  }
+}
+
+@layer components {
+  .text-glow {
+    text-shadow: 
+      0 0 10px hsl(var(--primary)),
+      0 0 20px hsl(var(--primary)),
+      0 0 40px hsl(var(--primary) / 0.5);
+  }
+
+  .text-glow-purple {
+    text-shadow: 
+      0 0 10px hsl(var(--accent)),
+      0 0 20px hsl(var(--accent)),
+      0 0 40px hsl(var(--accent) / 0.5);
+  }
+
+  .box-glow {
+    box-shadow: 
+      0 0 15px hsl(var(--primary) / 0.3),
+      0 0 30px hsl(var(--primary) / 0.2),
+      inset 0 0 15px hsl(var(--primary) / 0.1);
+  }
+
+  .box-glow-hover:hover {
+    box-shadow: 
+      0 0 20px hsl(var(--primary) / 0.5),
+      0 0 40px hsl(var(--primary) / 0.3),
+      inset 0 0 20px hsl(var(--primary) / 0.15);
+  }
+
+  .btn-bounce {
+    transition: transform 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  .btn-bounce:hover {
+    transform: scale(1.05);
+  }
+
+  .btn-bounce:active {
+    transform: scale(0.95);
+  }
+
+  .cyber-border {
+    border: 1px solid hsl(var(--primary) / 0.5);
+    position: relative;
+  }
+
+  .cyber-border::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    background: linear-gradient(
+      45deg,
+      hsl(var(--primary)) 0%,
+      transparent 40%,
+      transparent 60%,
+      hsl(var(--accent)) 100%
+    );
+    z-index: -1;
+    opacity: 0.5;
+    border-radius: inherit;
+  }
+}
+
+@layer utilities {
+  .animate-glow-pulse {
+    animation: glow-pulse 2s ease-in-out infinite;
+  }
+
+  .animate-bg-shift {
+    animation: bg-shift 8s ease-in-out infinite;
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    opacity: 0.5;
+    filter: blur(20px);
+  }
+  50% {
+    opacity: 0.8;
+    filter: blur(25px);
+  }
+}
+
+@keyframes bg-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-10px) rotate(1deg);
+  }
+  66% {
+    transform: translateY(5px) rotate(-1deg);
+  }
+}

@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Manager | Cybernetic Workflow</title>
+  <meta name="description" content="A futuristic task management application with cyberpunk aesthetics">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-primary: hsl(220, 20%, 6%);
+      --bg-secondary: hsl(220, 30%, 15%);
+      --bg-card: hsl(220, 25%, 10%);
+      --text-primary: hsl(180, 100%, 95%);
+      --text-muted: hsl(220, 15%, 60%);
+      --glow-cyan: hsl(180, 100%, 50%);
+      --glow-purple: hsl(280, 100%, 65%);
+      --glow-orange: hsl(35, 100%, 55%);
+      --glow-green: hsl(160, 100%, 45%);
+      --border-color: hsl(180, 50%, 25%);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    /* Cyber Background */
+    .cyber-background {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .cyber-background::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary), var(--bg-primary));
+    }
+
+    .glow-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      animation: glow-pulse 3s ease-in-out infinite;
+    }
+
+    .glow-orb-1 {
+      top: -150px;
+      left: -150px;
+      width: 400px;
+      height: 400px;
+      background: hsla(180, 100%, 50%, 0.2);
+    }
+
+    .glow-orb-2 {
+      top: 50%;
+      right: -150px;
+      width: 350px;
+      height: 350px;
+      background: hsla(280, 100%, 65%, 0.2);
+      animation-delay: 1s;
+    }
+
+    .glow-orb-3 {
+      bottom: -100px;
+      left: 30%;
+      width: 300px;
+      height: 300px;
+      background: hsla(180, 100%, 50%, 0.15);
+      animation-delay: 2s;
+    }
+
+    .grid-overlay {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(var(--glow-cyan) 1px, transparent 1px),
+        linear-gradient(90deg, var(--glow-cyan) 1px, transparent 1px);
+      background-size: 50px 50px;
+      opacity: 0.03;
+    }
+
+    @keyframes glow-pulse {
+      0%, 100% { opacity: 0.5; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.05); }
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .title {
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--glow-cyan);
+      text-shadow: 
+        0 0 10px var(--glow-cyan),
+        0 0 20px var(--glow-cyan),
+        0 0 40px hsla(180, 100%, 50%, 0.5);
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+    }
+
+    /* Text Glow */
+    .text-glow {
+      text-shadow: 
+        0 0 10px var(--glow-cyan),
+        0 0 20px var(--glow-cyan),
+        0 0 40px hsla(180, 100%, 50%, 0.5);
+    }
+
+    /* Input Section */
+    .input-section {
+      background: hsla(220, 25%, 10%, 0.6);
+      backdrop-filter: blur(12px);
+      border: 1px solid hsla(180, 50%, 25%, 0.5);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 
+        0 0 15px hsla(180, 100%, 50%, 0.2),
+        0 0 30px hsla(180, 100%, 50%, 0.1);
+    }
+
+    .task-input {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      font-size: 1rem;
+      font-family: 'Inter', sans-serif;
+      background: hsla(220, 30%, 15%, 0.5);
+      border: 1px solid hsla(180, 100%, 50%, 0.3);
+      border-radius: 0.5rem;
+      color: var(--text-primary);
+      outline: none;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(4px);
+    }
+
+    .task-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .task-input:focus {
+      border-color: var(--glow-cyan);
+      box-shadow: 0 0 15px hsla(180, 100%, 50%, 0.3);
+      background: hsla(220, 30%, 15%, 0.7);
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .tag-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .tag-btn {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      background: hsla(220, 30%, 15%, 0.5);
+      border: 1px solid hsla(180, 50%, 25%, 0.5);
+      border-radius: 0.5rem;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    .tag-btn:hover {
+      transform: scale(1.05);
+      border-color: hsla(180, 100%, 50%, 0.5);
+    }
+
+    .tag-btn:active {
+      transform: scale(0.95);
+    }
+
+    .tag-btn.active {
+      background: hsla(180, 100%, 50%, 0.2);
+      border-color: var(--glow-cyan);
+      color: var(--glow-cyan);
+      box-shadow: 
+        0 0 15px hsla(180, 100%, 50%, 0.3),
+        0 0 30px hsla(180, 100%, 50%, 0.2);
+    }
+
+    .right-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-left: auto;
+    }
+
+    .status-select {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-family: 'Inter', sans-serif;
+      background: hsla(220, 30%, 15%, 0.5);
+      border: 1px solid hsla(180, 50%, 25%, 0.5);
+      border-radius: 0.5rem;
+      color: var(--text-primary);
+      cursor: pointer;
+      outline: none;
+    }
+
+    .status-select option {
+      background: var(--bg-card);
+      color: var(--text-primary);
+    }
+
+    .add-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1.25rem;
+      font-size: 0.875rem;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: linear-gradient(135deg, var(--glow-cyan), var(--glow-purple));
+      border: none;
+      border-radius: 0.5rem;
+      color: var(--bg-primary);
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      box-shadow: 
+        0 0 15px hsla(180, 100%, 50%, 0.3),
+        0 0 30px hsla(180, 100%, 50%, 0.2);
+    }
+
+    .add-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px hsla(180, 100%, 50%, 0.5);
+    }
+
+    .add-btn:active {
+      transform: scale(0.95);
+    }
+
+    /* Columns */
+    .columns {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .columns {
+        grid-template-columns: 1fr;
+      }
+      
+      .title {
+        font-size: 2rem;
+      }
+      
+      .right-controls {
+        margin-left: 0;
+        width: 100%;
+        justify-content: flex-end;
+      }
+    }
+
+    .column {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .column-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .column-icon {
+      font-size: 1.5rem;
+    }
+
+    .column-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .column-count {
+      margin-left: 0.5rem;
+      padding: 0.125rem 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      background: hsla(180, 100%, 50%, 0.2);
+      border: 1px solid hsla(180, 100%, 50%, 0.3);
+      border-radius: 9999px;
+      color: var(--glow-cyan);
+    }
+
+    .tasks-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      min-height: 200px;
+    }
+
+    .empty-state {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 8rem;
+      border: 1px dashed hsla(180, 50%, 25%, 0.5);
+      border-radius: 0.75rem;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+
+    /* Task Card */
+    .task-card {
+      position: relative;
+      background: hsla(220, 25%, 10%, 0.8);
+      backdrop-filter: blur(4px);
+      border: 1px solid hsla(180, 50%, 25%, 0.5);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .task-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 0.75rem;
+      background: linear-gradient(135deg, hsla(180, 100%, 50%, 0.05), hsla(280, 100%, 65%, 0.05));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .task-card:hover {
+      border-color: hsla(180, 100%, 50%, 0.5);
+      box-shadow: 
+        0 0 20px hsla(180, 100%, 50%, 0.3),
+        0 0 40px hsla(180, 100%, 50%, 0.15);
+    }
+
+    .task-card:hover::before {
+      opacity: 1;
+    }
+
+    .task-card:hover .task-title {
+      text-shadow: 
+        0 0 10px var(--glow-cyan),
+        0 0 20px var(--glow-cyan);
+    }
+
+    .task-card-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .task-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .task-title {
+      font-weight: 500;
+      color: var(--text-primary);
+      transition: text-shadow 0.3s ease;
+    }
+
+    .delete-btn {
+      padding: 0.375rem;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      opacity: 0;
+      transition: all 0.2s ease;
+      border-radius: 0.25rem;
+    }
+
+    .task-card:hover .delete-btn {
+      opacity: 1;
+    }
+
+    .delete-btn:hover {
+      color: hsl(0, 85%, 60%);
+      background: hsla(0, 85%, 60%, 0.1);
+    }
+
+    .task-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+
+    .task-tag {
+      padding: 0.25rem 0.625rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      border-radius: 0.375rem;
+      border: 1px solid;
+    }
+
+    .task-tag.html {
+      background: hsla(35, 100%, 55%, 0.2);
+      color: var(--glow-orange);
+      border-color: hsla(35, 100%, 55%, 0.5);
+    }
+
+    .task-tag.css {
+      background: hsla(180, 100%, 50%, 0.2);
+      color: var(--glow-cyan);
+      border-color: hsla(180, 100%, 50%, 0.5);
+    }
+
+    .task-tag.javascript {
+      background: hsla(50, 100%, 50%, 0.2);
+      color: hsl(50, 100%, 60%);
+      border-color: hsla(50, 100%, 50%, 0.5);
+    }
+
+    .task-tag.react {
+      background: hsla(180, 100%, 50%, 0.2);
+      color: var(--glow-cyan);
+      border-color: hsla(180, 100%, 50%, 0.5);
+    }
+
+    /* SVG Icons */
+    .icon {
+      width: 1rem;
+      height: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Cyber Background -->
+  <div class="cyber-background">
+    <div class="glow-orb glow-orb-1"></div>
+    <div class="glow-orb glow-orb-2"></div>
+    <div class="glow-orb glow-orb-3"></div>
+    <div class="grid-overlay"></div>
+  </div>
+
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <h1 class="title">Task Manager</h1>
+      <p class="subtitle">Organize your workflow with style</p>
+    </header>
+
+    <!-- Input Section -->
+    <div class="input-section">
+      <input type="text" class="task-input" id="taskInput" placeholder="Enter your task">
+      
+      <div class="controls">
+        <div class="tag-filters" id="tagFilters">
+          <button class="tag-btn" data-tag="HTML">HTML</button>
+          <button class="tag-btn" data-tag="CSS">CSS</button>
+          <button class="tag-btn" data-tag="JavaScript">JavaScript</button>
+          <button class="tag-btn" data-tag="React">React</button>
+        </div>
+        
+        <div class="right-controls">
+          <select class="status-select" id="statusSelect">
+            <option value="todo">To do</option>
+            <option value="doing">Doing</option>
+            <option value="done">Done</option>
+          </select>
+          
+          <button class="add-btn" id="addBtn">
+            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            Add Task
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Task Columns -->
+    <div class="columns">
+      <div class="column" id="todoColumn">
+        <div class="column-header">
+          <span class="column-icon">🎯</span>
+          <h2 class="column-title text-glow">To do</h2>
+          <span class="column-count" id="todoCount">0</span>
+        </div>
+        <div class="tasks-container" id="todoTasks"></div>
+      </div>
+
+      <div class="column" id="doingColumn">
+        <div class="column-header">
+          <span class="column-icon">🌟</span>
+          <h2 class="column-title text-glow">Doing</h2>
+          <span class="column-count" id="doingCount">0</span>
+        </div>
+        <div class="tasks-container" id="doingTasks"></div>
+      </div>
+
+      <div class="column" id="doneColumn">
+        <div class="column-header">
+          <span class="column-icon">✅</span>
+          <h2 class="column-title text-glow">Done</h2>
+          <span class="column-count" id="doneCount">0</span>
+        </div>
+        <div class="tasks-container" id="doneTasks"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Initial tasks data
+    let tasks = [
+      { id: 1, title: "Change Delete Icon", tags: ["HTML", "CSS"], status: "todo" },
+      { id: 2, title: "Start Section 4 for React", tags: ["React"], status: "todo" },
+      { id: 3, title: "This is new tasks", tags: ["HTML", "CSS"], status: "todo" },
+      { id: 4, title: "Complete Project 1", tags: ["React"], status: "doing" },
+      { id: 5, title: "This is another task", tags: ["JavaScript", "CSS"], status: "doing" },
+      { id: 6, title: "Working on HTML", tags: ["HTML"], status: "done" }
+    ];
+
+    let selectedTags = [];
+    let nextId = 7;
+
+    // DOM Elements
+    const taskInput = document.getElementById("taskInput");
+    const tagButtons = document.querySelectorAll(".tag-btn");
+    const statusSelect = document.getElementById("statusSelect");
+    const addBtn = document.getElementById("addBtn");
+
+    // Tag filter click handlers
+    tagButtons.forEach(btn => {
+      btn.addEventListener("click", function() {
+        const tag = this.dataset.tag;
+        if (selectedTags.includes(tag)) {
+          selectedTags = selectedTags.filter(t => t !== tag);
+          this.classList.remove("active");
+        } else {
+          selectedTags.push(tag);
+          this.classList.add("active");
+        }
+      });
+    });
+
+    // Add task handler
+    addBtn.addEventListener("click", addTask);
+    taskInput.addEventListener("keydown", function(e) {
+      if (e.key === "Enter") addTask();
+    });
+
+    function addTask() {
+      const title = taskInput.value.trim();
+      if (!title) return;
+
+      const task = {
+        id: nextId++,
+        title: title,
+        tags: selectedTags.length > 0 ? [...selectedTags] : ["HTML"],
+        status: statusSelect.value
+      };
+
+      tasks.push(task);
+      taskInput.value = "";
+      
+      // Clear selected tags
+      selectedTags = [];
+      tagButtons.forEach(btn => btn.classList.remove("active"));
+      
+      renderTasks();
+    }
+
+    function deleteTask(id) {
+      tasks = tasks.filter(task => task.id !== id);
+      renderTasks();
+    }
+
+    function createTaskCard(task) {
+      const card = document.createElement("div");
+      card.className = "task-card";
+      card.innerHTML = `
+        <div class="task-card-content">
+          <div class="task-header">
+            <h3 class="task-title">${task.title}</h3>
+            <button class="delete-btn" onclick="deleteTask(${task.id})">
+              <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+              </svg>
+            </button>
+          </div>
+          <div class="task-tags">
+            ${task.tags.map(tag => `<span class="task-tag ${tag.toLowerCase()}">${tag}</span>`).join("")}
+          </div>
+        </div>
+      `;
+      return card;
+    }
+
+    function renderTasks() {
+      const todoTasks = tasks.filter(t => t.status === "todo");
+      const doingTasks = tasks.filter(t => t.status === "doing");
+      const doneTasks = tasks.filter(t => t.status === "done");
+
+      // Update counts
+      document.getElementById("todoCount").textContent = todoTasks.length;
+      document.getElementById("doingCount").textContent = doingTasks.length;
+      document.getElementById("doneCount").textContent = doneTasks.length;
+
+      // Render columns
+      renderColumn("todoTasks", todoTasks);
+      renderColumn("doingTasks", doingTasks);
+      renderColumn("doneTasks", doneTasks);
+    }
+
+    function renderColumn(containerId, taskList) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = "";
+
+      if (taskList.length === 0) {
+        container.innerHTML = '<div class="empty-state">No tasks yet</div>';
+        return;
+      }
+
+      taskList.forEach(task => {
+        container.appendChild(createTaskCard(task));
+      });
+    }
+
+    // Initial render
+    renderTasks();
+  </script>
+</body>
+</html>
